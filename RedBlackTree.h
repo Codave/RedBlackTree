@@ -1,4 +1,5 @@
 #pragma once
+#include"Except.h"
 
 template<class Comparable>
 class RedBlackTree;
@@ -11,13 +12,20 @@ class RedBlackTree {
 public:
 	RedBlackTree(const Comparable& negInf);	//红黑树的构造函数
 	~RedBlackTree();	//红黑树的析构函数
-	
+
 	enum{RED,BLACK};
+
+	void insert(const Comparable& x);
 
 	typedef RedBlackNode<Comparable> Node;	//定义类型别名
 private:
 	Node* header;  //头指针
 	Node* nullNode;	//空结点
+
+	Node* current;	//当前结点
+	Node* parent;	//父结点
+	Node* grand;	//祖父结点
+	Node* great;	//曾祖父结点
 };
 
 template<class Comparable>
@@ -38,7 +46,7 @@ class RedBlackNode {
 };
 
 template<class Comparable>
-RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {
+RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {	//构造函数
 	nullNode = new Node();
 	nullNode->left = nullNode->right = nullNode;
 	header = new Node(negInf);
@@ -46,7 +54,30 @@ RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {
 }
 
 template<class Comparable>
-RedBlackTree<Comparable>::~RedBlackTree() {
+RedBlackTree<Comparable>::~RedBlackTree() {	//析构函数
 	delete nullNode;
 	delete header;
+}
+ 
+template<class Comparable>
+void RedBlackTree<Comparable>::insert(const Comparable& x) {
+	current = parent = grand = header;
+	nullNode->element = x;
+
+	while (current->element != x) {
+		great = grand;	grand = parent;	parent = current;
+		current = x < current->element ? current->left : current->right;
+	}
+
+	if (current != nullNode) {
+		throw DuplicateItemException();
+	}
+
+	current = new Node(x, nullNode, nullNode);
+	if (x < parent->element) {
+		parent->left = current;
+	}
+	else {
+		parent->right = current;
+	}
 }
