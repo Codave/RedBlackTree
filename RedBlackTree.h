@@ -18,7 +18,8 @@ public:
 	void insert(const Comparable& x);
 
 	typedef RedBlackNode<Comparable> Node;	//定义类型别名
-private:
+//private:  为了测试，临时变成public
+public:   
 	Node* header;  //头指针
 	Node* nullNode;	//空结点
 
@@ -30,7 +31,7 @@ private:
 
 template<class Comparable>
 class RedBlackNode {
-
+public:	//为了测试，临时变为共有
 	Comparable		element;
 	RedBlackNode*	left;
 	RedBlackNode*	right;
@@ -46,7 +47,7 @@ class RedBlackNode {
 };
 
 template<class Comparable>
-RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {	//构造函数
+RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {	//红黑树的构造函数
 	nullNode = new Node();
 	nullNode->left = nullNode->right = nullNode;
 	header = new Node(negInf);
@@ -54,7 +55,7 @@ RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {	//构造函数
 }
 
 template<class Comparable>
-RedBlackTree<Comparable>::~RedBlackTree() {	//析构函数
+RedBlackTree<Comparable>::~RedBlackTree() {	//红黑树的析构函数
 	delete nullNode;
 	delete header;
 }
@@ -62,10 +63,10 @@ RedBlackTree<Comparable>::~RedBlackTree() {	//析构函数
 template<class Comparable>
 void RedBlackTree<Comparable>::insert(const Comparable& x) {
 	current = parent = grand = header;
-	nullNode->element = x;
+	nullNode->element = x;		//	成员函数可以访问private数据
 
 	while (current->element != x) {
-		great = grand;	grand = parent;	parent = current;
+  		great = grand;		grand = parent;		parent = current;
 		current = x < current->element ? current->left : current->right;
 	}
 
@@ -80,4 +81,8 @@ void RedBlackTree<Comparable>::insert(const Comparable& x) {
 	else {
 		parent->right = current;
 	}
+
+	//	自动平衡 -> 红黑树
+
+
 }
