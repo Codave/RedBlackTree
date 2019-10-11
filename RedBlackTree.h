@@ -27,11 +27,14 @@ public:
 	Node* parent;	//父结点
 	Node* grand;	//祖父结点
 	Node* great;	//曾祖父结点
+
+	void rotateWithLeftChild(Node*& k2) const;
+	void rotateWithRightChild(Node*& k1) const;
 };
 
 template<class Comparable>
 class RedBlackNode {
-public:	//为了测试，临时变为共有
+public:	//为了测试，临时变为public
 	Comparable		element;
 	RedBlackNode*	left;
 	RedBlackNode*	right;
@@ -83,6 +86,20 @@ void RedBlackTree<Comparable>::insert(const Comparable& x) {
 	}
 
 	//	自动平衡 -> 红黑树
+}
 
+template<class Comparable>
+void RedBlackTree<Comparable>::rotateWithRightChild(Node*& k2) const {	//右旋
+	Node* k1 = k2->left;
+	k2->left = k1->right;
+	k1->right = k2;
+	k2 = k1;
+}
 
+template<class Comparable>
+void RedBlackTree<Comparable>::rotateWithLeftChild(Node*& k1) const {	//左旋
+	Node* k2 = k1->right;
+	k1->right = k2->left;
+	k2->left = k1;
+	k1 = k2;
 }
