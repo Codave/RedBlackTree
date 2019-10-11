@@ -18,12 +18,12 @@ int main() {
 	cout << t.header->right->left->right->element << endl;
 
 	cout << "向右转" << endl;
-	t.rotateWithRightChild(t.header->right);
+	t.rotateWithLeftChild(t.header->right);
 	cout << t.header->right->element << endl;
 	cout << t.header->right->right->left->element << endl;
 
 	cout << "向左转" << endl;
-	t.rotateWithLeftChild(t.header->right);
+	t.rotateWithRightChild(t.header->right);
 	cout << t.header->right->element << endl;
 	cout << t.header->right->left->element << endl;
 	cout << t.header->right->right->element << endl;

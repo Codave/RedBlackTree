@@ -30,6 +30,9 @@ public:
 
 	void rotateWithLeftChild(Node*& k2) const;
 	void rotateWithRightChild(Node*& k1) const;
+
+	void doubleRotateWithLeftChild(Node*& k3) const;
+	void doubleRotateWithRightChild(Node*& k1) const;
 };
 
 template<class Comparable>
@@ -89,17 +92,27 @@ void RedBlackTree<Comparable>::insert(const Comparable& x) {
 }
 
 template<class Comparable>
-void RedBlackTree<Comparable>::rotateWithRightChild(Node*& k2) const {	//ÓÒÐý
+void RedBlackTree<Comparable>::rotateWithLeftChild(Node*& k2) const {	//ÓÒÐý
 	Node* k1 = k2->left;
 	k2->left = k1->right;
 	k1->right = k2;
-	k2 = k1;
+	k2 = k1; 
 }
 
 template<class Comparable>
-void RedBlackTree<Comparable>::rotateWithLeftChild(Node*& k1) const {	//×óÐý
+void RedBlackTree<Comparable>::rotateWithRightChild(Node*& k1) const {	//×óÐý
 	Node* k2 = k1->right;
 	k1->right = k2->left;
 	k2->left = k1;
 	k1 = k2;
+}
+
+template<class Comparable>
+void RedBlackTree<Comparable>::doubleRotateWithLeftChild(Node*& k3) const {
+
+}
+
+template<class Comparable>
+void RedBlackTree<Comparable>::doubleRotateWithRightChild(Node*& k1) const {
+
 }
