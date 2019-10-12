@@ -28,11 +28,11 @@ public:
 	Node* grand;	//×æ¸¸½áµã
 	Node* great;	//Ôø×æ¸¸½áµã
 
-	void rotateWithLeftChild(Node*& k2) const;
-	void rotateWithRightChild(Node*& k1) const;
+	void rotateWithLeftChild(Node*& k2) const;	//ÓÒÐý
+	void rotateWithRightChild(Node*& k1) const;	//×óÐý
 
-	void doubleRotateWithLeftChild(Node*& k3) const;
-	void doubleRotateWithRightChild(Node*& k1) const;
+	void doubleRotateWithLeftChild(Node*& k3) const;	//ÓÒÐý
+	void doubleRotateWithRightChild(Node*& k1) const;	//×óÐý
 };
 
 template<class Comparable>
@@ -109,10 +109,12 @@ void RedBlackTree<Comparable>::rotateWithRightChild(Node*& k1) const {	//×óÐý
 
 template<class Comparable>
 void RedBlackTree<Comparable>::doubleRotateWithLeftChild(Node*& k3) const {
-
+	rotateWithRightChild(k3->left);
+	rotateWithLeftChild(k3);
 }
 
 template<class Comparable>
 void RedBlackTree<Comparable>::doubleRotateWithRightChild(Node*& k1) const {
-
+	rotateWithLeftChild(k1->right);
+	rotateWithRightChild(k1);
 }
