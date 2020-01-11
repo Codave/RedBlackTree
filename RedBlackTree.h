@@ -33,6 +33,10 @@ public:
 
 	void doubleRotateWithLeftChild(Node*& k3) const;	//右旋
 	void doubleRotateWithRightChild(Node*& k1) const;	//左旋
+
+	void handleReorient(const Comparable& item);
+	RedBlackNode<Comparable>* rotate(const Comparable& item, Node* parent) const;  //其实返回值是Node*
+
 };
 
 template<class Comparable>
@@ -54,9 +58,9 @@ public:	//为了测试，临时变为public
 
 template<class Comparable>
 RedBlackTree<Comparable>::RedBlackTree(const Comparable& negInf) {	//红黑树的构造函数
-	nullNode = new Node();
+	nullNode = new Node();	//空结点（NULL）
 	nullNode->left = nullNode->right = nullNode;
-	header = new Node(negInf);
+	header = new Node(negInf);    //伪头结点
 	header->left = header->right = nullNode;
 }
 
@@ -72,11 +76,15 @@ void RedBlackTree<Comparable>::insert(const Comparable& x) {
 	nullNode->element = x;		//	成员函数可以访问private数据
 
 	while (current->element != x) {
-  		great = grand;		grand = parent;		parent = current;
+		great = grand;		grand = parent;		parent = current;
 		current = x < current->element ? current->left : current->right;
+
+		if (current->left->color == RED && current->right->color == RED) {
+			handleReorient(x);
+		}
 	}
 
-	if (current != nullNode) {
+	if (current != nullNode) {    //找到了相等的结点
 		throw DuplicateItemException();
 	}
 
@@ -87,6 +95,8 @@ void RedBlackTree<Comparable>::insert(const Comparable& x) {
 	else {
 		parent->right = current;
 	}
+	handleReorient(x);
+
 
 	//	自动平衡 -> 红黑树
 }
@@ -108,13 +118,51 @@ void RedBlackTree<Comparable>::rotateWithRightChild(Node*& k1) const {	//左旋
 }
 
 template<class Comparable>
-void RedBlackTree<Comparable>::doubleRotateWithLeftChild(Node*& k3) const {
+void RedBlackTree<Comparable>::doubleRotateWithLeftChild(Node*& k3) const {//先左旋后右旋
 	rotateWithRightChild(k3->left);
 	rotateWithLeftChild(k3);
 }
 
 template<class Comparable>
-void RedBlackTree<Comparable>::doubleRotateWithRightChild(Node*& k1) const {
+void RedBlackTree<Comparable>::doubleRotateWithRightChild(Node*& k1) const {//先右旋后左旋
 	rotateWithLeftChild(k1->right);
 	rotateWithRightChild(k1);
+}
+
+template<class Comparable>
+inline void RedBlackTree<Comparable>::handleReorient(const Comparable& item) {
+	//变色
+	current->color = RED;
+	current->left->color = BLACK;
+	current->right->color = BLACK;
+
+	if (parent->color == RED) {
+		grand->color = RED;
+		if (item < grand->element != item < parent->element) {
+			parent = rotate(item, grand);
+		}
+		current = rotate(item, great);
+		current->color = BLACK;
+	}
+	header->right->color = BLACK;
+
+	//单旋转
+
+	//双旋转
+}
+
+template<class Comparable>
+RedBlackNode<Comparable>* RedBlackTree<Comparable>::rotate(const Comparable& item, Node* theParent) const{
+	if (item < theParent->element) {
+		item < theParent->left->element ?
+			rotateWithLeftChild(theParent->left) :
+			rotateWithRightChild(theParent->left);
+		return theParent->left;
+	}
+	else {
+		item < theParent->right->element ?
+			rotateWithLeftChild(theParent->right) :
+			rotateWithRightChild(theParent->right);
+		return theParent->right;
+	}
 }
